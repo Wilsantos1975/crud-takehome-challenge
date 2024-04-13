@@ -10,51 +10,67 @@ const {
 } = require("../queries/jobApplicationsQueries");
 
 applicationsRouter.get("/", async (req, res) => {
-  const applications = await getAllApplications();
-  res.status(200).json(applications);
+  try {
+    const applications = await getAllApplications();
+    res.status(200).json(applications);
+  } catch (e) {
+    res.status(404).json({ error: "No applications found" });
+  }
 });
 
 applicationsRouter.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const newApplication = await getApplicationById(id);
-  res.status(200).json(newApplication);
+  try {
+    const { id } = req.params;
+    const newApplication = await getApplicationById(id);
+    res.status(200).json(newApplication);
+  } catch (e) {
+    res.status(404).json({ error: "Application not found" });
+  }
 });
 
 applicationsRouter.post("/", async (req, res) => {
-  const { company, url, createdAt, status, updatedAt } = req.body;
-  const newApplication = await createApplication(
-    company,
-    url,
-    createdAt,
-    status,
-    updatedAt
-  );
-  res.status(201).json(newApplication);
+  try {
+    const { company, url, createdAt, status, updatedAt } = req.body;
+    const newApplication = await createApplication(
+      company,
+      url,
+      createdAt,
+      status,
+      updatedAt
+    );
+    res.status(201).json(newApplication);
+  } catch (e) {
+    res.status(404).json({ error: "Application not found" });
+  }
 });
 
 applicationsRouter.put("/:id", async (req, res) => {
+  try {
     const { id } = req.params;
     const { company, url, createdAt, status, updatedAt } = req.body;
     const updatedApplication = await updateApplication(
-        id,
-        company,
-        url,
-        createdAt,
-        status,
-        updatedAt
+      company,
+      id,
+      url,
+      createdAt,
+      status,
+      updatedAt
     );
     res.status(200).json(updatedApplication);
-    }
-);
+  } catch (e) {
+    res.status(404).json({ error: "Application not found" });
+  }
+});
 
 applicationsRouter.delete("/:id", async (req, res) => {
+  try {
     const { id } = req.params;
     const deletedApplication = await deleteApplication(id);
     res.status(200).json(deletedApplication);
-    }
-);
-
-
+  } catch (e) {
+    res.status(404).json({ error: "Application not found" });
+  }
+});
 
 
 module.exports = applicationsRouter;
