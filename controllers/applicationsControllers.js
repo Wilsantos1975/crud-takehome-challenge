@@ -9,6 +9,7 @@ const {
   deleteApplication,
 } = require("../queries/jobApplicationsQueries");
 
+
 applicationsRouter.get("/", async (req, res) => {
   try {
     const applications = await getAllApplications();
@@ -21,6 +22,7 @@ applicationsRouter.get("/", async (req, res) => {
 applicationsRouter.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const newApplication = await getApplicationById(id);
     res.status(200).json(newApplication);
   } catch (e) {
