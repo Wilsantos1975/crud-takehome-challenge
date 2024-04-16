@@ -9,6 +9,8 @@ const {
   deleteApplication,
 } = require("../queries/jobApplicationsQueries");
 
+const { checkApplicationID, checkApplicationExists,validateInput, checkApplicationStatus } = require("../middleware/index");
+
 
 applicationsRouter.get("/", async (req, res) => {
   try {
@@ -19,7 +21,7 @@ applicationsRouter.get("/", async (req, res) => {
   }
 });
 
-applicationsRouter.get("/:id", async (req, res) => {
+applicationsRouter.get("/:id", checkApplicationID, checkApplicationExists, async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id)
@@ -30,7 +32,7 @@ applicationsRouter.get("/:id", async (req, res) => {
   }
 });
 
-applicationsRouter.post("/", async (req, res) => {
+applicationsRouter.post("/", validateInput, checkApplicationStatus, async (req, res) => {
   try {
     const { company, url, createdAt, status, updatedAt } = req.body;
     const newApplication = await createApplication(
@@ -46,7 +48,7 @@ applicationsRouter.post("/", async (req, res) => {
   }
 });
 
-applicationsRouter.put("/:id", async (req, res) => {
+applicationsRouter.put("/:id", validateInput, checkApplicationStatus, checkApplicationID, async (req, res) => {
   try {
     const { id } = req.params;
     const { company, url, createdAt, status, updatedAt } = req.body;
@@ -64,7 +66,7 @@ applicationsRouter.put("/:id", async (req, res) => {
   }
 });
 
-applicationsRouter.delete("/:id", async (req, res) => {
+applicationsRouter.delete("/:id", checkApplicationID,  async (req, res) => {
   try {
     const { id } = req.params;
     const deletedApplication = await deleteApplication(id);

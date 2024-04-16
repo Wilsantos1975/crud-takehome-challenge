@@ -18,7 +18,7 @@ const getAllApplications = async () => {
 };
 
 const getApplicationById = async (id) => {
-  return jobApplications.find((application) => application.id === parseInt(id);
+  return jobApplications.find((application) => application.id === parseInt(id));
 };
 
 const createApplication = async (application) => {
