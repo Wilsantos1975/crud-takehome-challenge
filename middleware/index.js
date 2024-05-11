@@ -26,29 +26,49 @@ const checkApplicationExists = async (req, res, next) => {
   }
 };
 
-const  validateInput = async(req, res, next) => {
+
+const validateInput = async (req, res, next) => {
     const application = req.body;
-
-    for (let field in applicationFields) {
-        if(!application[field] || typeof application[field] !== 'string') {
-
-            return res.status(404).json({ error: `${field} is required` });
-        }
+  
+    // Check if all required fields are present and are strings
+    for (let field of ['company', 'url', 'createdAt', 'status', 'updatedAt']) {
+      if (!application[field] || typeof application[field] !== 'string') {
+        return res.status(400).json({ error: `${field} is required and must be a string` });
+      }
     }
-
-    for (let field in applicationFields) {
-        if(field !== 'url' && !applicationFields.includes(field)) {
-            return res.status(404).json({ error: `${field} is too long` });
-        }
-    }  
-
-
-
-    if(!application.url) {
-        application.url = null;
+  
+    // Check if any field is too long
+    for (let field in application) {
+      if (field !== 'url' && application[field].length > 100) {
+        return res.status(400).json({ error: `${field} is too long` });
+      }
     }
-    next();
-}
+  
+    next(); // Call next middleware if all validations pass
+  };
+// const  validateInput = async(req, res, next) => {
+//     const application = req.body;
+
+//     for (let field in applicationFields) {
+//         if(!application[field] || typeof application[field] !== 'string') {
+
+//             return res.status(404).json({ error: `${field} is required` });
+//         }
+//     }
+
+//     for (let field in applicationFields) {
+//         if(field !== 'url' && !applicationFields.includes(field)) {
+//             return res.status(404).json({ error: `${field} is too long` });
+//         }
+//     }  
+
+
+
+//     if(!application.url) {
+//         application.url = null;
+//     }
+//     next();
+// }
 
 const checkApplicationStatus = async(req, res, next) => {
     const application = req.body;
@@ -62,4 +82,4 @@ const checkApplicationStatus = async(req, res, next) => {
     
 
 
-module.exports = { checkApplicationID, checkApplicationExists, validateInput, checkApplicationStatus};
+module.exports = { checkApplicationID, checkApplicationExists,  checkApplicationStatus, validateInput};
